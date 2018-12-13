@@ -1,5 +1,5 @@
 = Configuring S3 as Primary Storage
-:occ-files_transfer-ownership-
+:occ-files_transfer-ownership-link:
 xref:administration_manual:configuration/server/occ_command.adoc?highlight=transfer_ownership#the-files-transfer-ownership-command
 
 Administrators can configure Amazon S3 objects as the primary ownCloud storage location.
@@ -10,25 +10,18 @@ the following reasons:
 * The ownCloud log file is saved in the data directory
 * Legacy apps may not support using anything but the `owncloud/data` directory
 
-[NOTE]
-====
-Even if the ownCloud log file is stored in an alternate location (by changing the location in `config.php`) 
+NOTE: Even if the ownCloud log file is stored in an alternate location (by changing the location in `config.php`) 
 `owncloud/data` may still be required for backward compatibility with some apps.
-====
 
 That said, https://marketplace.owncloud.com/apps/objectstore[the Object Storage Support app]
-(`objectstore`) is still available, but 
-https://marketplace.owncloud.com/apps/files_primary_s3[the S3 Object Storage app]
-(https://github.com/owncloud/files_primary_s3[files_primary_s3]) is the preferred way to provide S3
-storage support. However, OpenStack Swift has been deprecated.
-When using `files_primary_s3`, the Amazon S3 bucket needs to be created manually 
-https://docs.aws.amazon.com/AmazonS3/latest/gsg/CreatingABucket.html[according to the developer documentation],
-and versioning needs to be enabled.
+(`objectstore`) is still available, but https://marketplace.owncloud.com/apps/files_primary_s3[the S3 Object Storage app] (https://github.com/owncloud/files_primary_s3[files_primary_s3]) is the preferred way to provide S3
+storage support. 
 
-[WARNING]
-====
-ownCloud GmbH provides consulting for migrations from `objectstore` to `files_primary_s3`.
-====
+NOTE: OpenStack Swift has been deprecated.
+
+When using `files_primary_s3`, the Amazon S3 bucket needs to be created manually https://docs.aws.amazon.com/AmazonS3/latest/gsg/CreatingABucket.html[according to the developer documentation], and versioning needs to be enabled.
+
+NOTE: ownCloud GmbH provides consulting for migrations from `objectstore` to `files_primary_s3`.
 
 [IMPORTANT]
 ====
@@ -167,55 +160,6 @@ $CONFIG = [
                 'endpoint' => 'http://scality:8000/',
             ],
         ],
-    ],
-],
-....
-
-[[s3-multibucket-configuration]]
-== S3 Multibucket Configuration
-
-ownCloud 9.1+ has multibucket support for S3 object stores:
-
-[source,json]
-....
-'objectstore_multibucket' => [
-   'class' => 'OCA\ObjectStore\S3',
-   'arguments' => [
-       'autocreate' => true,
-       'options' => [
-           'version' => '2006-03-01',
-           'region'  => 'eu-central-1',
-           'credentials' => [
-               'key' => 'EJ39ITYZEUH5BGWDRUFY',
-               'secret' => 'M5MrXTRjkyMaxXPe2FRXMTfTfbKEnZCu+7uRTVSj',
-           ],
-       ],
-   ],
-],
-....
-
-[[openstack-swift]]
-=== OpenStack Swift
-
-The Swift backend mounts a container on an OpenStack Object Storage
-server into the virtual filesystem. The class to be used is
-`\\OC\\Files\\ObjectStore\\Swift`:
-
-[source,json]
-....
-'objectstore' => [
-    'class' => 'OC\\Files\\ObjectStore\\Swift',
-    'arguments' => [
-        'username' => 'demo',
-        'password' => 'password',
-        'container' => 'owncloud',
-        'autocreate' => true,
-        'region' => 'RegionOne',
-        'url' => 'http://devstack:5000/v2.0',
-        'tenantName' => 'demo',
-        'serviceName' => 'swift',
-        // url Type, optional, public, internal or admin
-        'urlType' => 'internal'
     ],
 ],
 ....
